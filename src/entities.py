@@ -16,6 +16,8 @@ class Vacancy:
         self.salary_to = salary_to
         self.is_real(self.salary_to)
 
+        self.pre_init(name, url, salary_from, salary_to)
+
         if self.salary_to is not None and self.salary_from is not None:
             if self.salary_to < self.salary_from:
                 raise ValueError("Максимум зарплаты должен быть больше минимума!")
@@ -24,6 +26,15 @@ class Vacancy:
     def is_real(salary: int | None) -> None:
         if salary is not None and salary < 0:
             raise ValueError("Зарплата должна быть положительным числом!")
+
+    @staticmethod
+    def pre_init(name: str, url: str, salary_from: int | None, salary_to: int | None):
+        if not name:
+            raise Exception("У вакансии должно быть название!")
+        elif not url:
+            raise Exception("У вакансии должна быть ссылка!")
+        elif not salary_from and not salary_to:
+            raise Exception("У вакансии нет зарплаты(((")
 
     def __lt__(self, other: 'Vacancy'):
 

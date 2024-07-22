@@ -26,13 +26,13 @@ class Connector(ABC):
 class JsonConnector(Connector):
 
     def __init__(self, file_path: str | Path, encoding: str = 'utf-8') -> None:
-        self.path = file_path
+        self.__path = file_path
         self.encoding = encoding
 
     def get_vacancies(self) -> list[Vacancy]:
         vacancies = []
-        PATH = Path(self.path)
-        with open(self.path, 'r', encoding=self.encoding) as file:
+        PATH = Path(self.__path)
+        with open(self.__path, 'r', encoding=self.encoding) as file:
             if PATH.stat().st_size == 0:
                 return []
             for item in json.load(file):
@@ -45,14 +45,15 @@ class JsonConnector(Connector):
         if vacancy not in vacancies:
             vacancies.append(vacancy)
             data = [vars(vac) for vac in vacancies]
-            with open(self.path, 'w', encoding=self.encoding) as file:
-                json.dump(data, file)
+            with open(self.__path, 'w+', encoding=self.encoding) as file:
+                file.truncate()
+                file.write(json.dumps(data))
 
     def remove_vacancy(self, vacancy: Vacancy) -> None:
         vacancies = self.get_vacancies()
         if vacancy in vacancies:
             vacancies.remove(vacancy)
             data = [vars(vac) for vac in vacancies]
-            with open(self.path, 'w', encoding=self.encoding) as file:
+            with open(self.__path, 'w', encoding=self.encoding) as file:
                 json.dump(data, file)
 

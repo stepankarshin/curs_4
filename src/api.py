@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from src.entities import Vacancy
+from src.utils import vac_maker
 import requests
 
 
@@ -23,14 +24,4 @@ class HHVacancies(BaseVacancies):
         response.raise_for_status()
         data = response.json()
         vacancies = data['items']
-        return [
-            Vacancy(
-                name=item['name'],
-                url=item['alternate_url'],
-                salary_currency=item['salary']['currency'],
-                salary_from=item['salary']['from'],
-                salary_to=item['salary']['to']
-            )
-            for item in vacancies
-        ]
-
+        return vac_maker(vacancies)
