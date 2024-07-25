@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from src.entities import Vacancy
 from pathlib import Path
-from dataclasses import asdict
 import json
 
 
@@ -25,9 +24,10 @@ class Connector(ABC):
 
 class JsonConnector(Connector):
 
-    def __init__(self, file_path: str | Path, encoding: str = 'utf-8') -> None:
+    def __init__(self, file_path: str | Path, encoding: str = 'utf-8', file_name: str = 'vacancies') -> None:
         self.__path = file_path
         self.encoding = encoding
+        self.file_name = file_name
 
     def get_vacancies(self) -> list[Vacancy]:
         vacancies = []
@@ -45,8 +45,7 @@ class JsonConnector(Connector):
         if vacancy not in vacancies:
             vacancies.append(vacancy)
             data = [vars(vac) for vac in vacancies]
-            with open(self.__path, 'w+', encoding=self.encoding) as file:
-                file.truncate()
+            with open(self.__path, 'w', encoding=self.encoding) as file:
                 file.write(json.dumps(data))
 
     def remove_vacancy(self, vacancy: Vacancy) -> None:

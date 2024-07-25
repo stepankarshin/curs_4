@@ -1,4 +1,5 @@
-from  src.entities import Vacancy
+from src.entities import Vacancy
+import json
 
 
 def vac_maker(items: list[dict]) -> list[Vacancy]:
@@ -12,3 +13,8 @@ def vac_maker(items: list[dict]) -> list[Vacancy]:
                 salary_to=item['salary']['to']
             ))
     return lst
+
+
+def clear_json_file(path: str):
+    with open(path, 'w', encoding='utf-8') as file:
+        file.write(json.dumps([]))
